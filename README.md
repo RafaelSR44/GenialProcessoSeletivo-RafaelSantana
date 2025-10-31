@@ -461,13 +461,6 @@ lsof -ti:3000 | xargs kill -9
 
 ---
 
-## Documentação Técnica Adicional
-
-- **[SCRIPTS.md](SCRIPTS.md)** - Scripts e comandos úteis do projeto
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Guia de resolução de problemas
-
----
-
 ## Autor
 
 **Rafael Santana**  
@@ -485,19 +478,17 @@ Este projeto foi desenvolvido para fins educacionais e de avaliação no process
 
 ## Changelog
 
-### v2.0.0 - Sistema Completo de Gestão
-- ✅ Implementação de autenticação com Better Auth
-- ✅ Integração com banco de dados Neon PostgreSQL
-- ✅ CRUD completo de clientes e carteiras
-- ✅ Validação automática de suitability em adições de ativos
-- ✅ Sistema de termos de ciência com registro em banco
-- ✅ Interface profissional sem elementos "IA"
-- ✅ Navegação entre páginas com proteção de rotas
+### v2.0.0 - Sistema de Gestão
+- Implementação de autenticação com Better Auth
+- Integração com banco de dados Neon PostgreSQL
+- CRUD completo de clientes e carteiras
+- Validação automática de suitability em adições de ativos
+- Navegação entre páginas com proteção de rotas
 
 ### v1.0.0 - Motor de Validação Inicial
-- ✅ Validação de suitability standalone
-- ✅ Cálculo de risco de carteira
-- ✅ Geração de relatórios
+- Validação de suitability standalone
+- Cálculo de risco de carteira
+- Geração de relatórios
 
 ---
 
