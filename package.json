@@ -1,0 +1,34 @@
+{
+  "name": "genial-processo-seletivo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "tsx lib/suitability.test.ts"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/client": "^6.18.0",
+    "axios": "^1.7.2",
+    "bcryptjs": "^3.0.2",
+    "better-auth": "^1.3.34",
+    "dotenv": "^17.2.3",
+    "next": "^15.0.3",
+    "prisma": "^6.18.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.0.3",
+    "tsx": "^4.20.6",
+    "typescript": "^5.5.3"
+  }
+}

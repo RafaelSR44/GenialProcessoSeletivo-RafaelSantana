@@ -1,0 +1,169 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Modelo de Usuário (Better Auth)
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?   // Opcional - gerenciado pelo Better Auth
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relacionamentos
+  clientes      Cliente[]
+  sessions      Session[]
+  accounts      Account[]
+  
+  @@map("users")
+}
+
+// Sessões de autenticação
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+// Contas de autenticação (Better Auth)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  accountId         String
+  providerId        String
+  accessToken       String?
+  refreshToken      String?
+  idToken           String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope             String?
+  password          String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([providerId, accountId])
+  @@map("accounts")
+}
+
+// Perfil do Cliente Investidor
+model Cliente {
+  id              String   @id @default(cuid())
+  userId          String
+  nome            String
+  email           String
+  perfil          String   // Conservador, Moderado, Arrojado
+  scoreMaxRisco   Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relacionamentos
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carteiras       Carteira[]
+  validacoes      Validacao[]
+  termosCiencia   TermoCiencia[]
+  
+  @@map("clientes")
+}
+
+// Carteira de Investimentos
+model Carteira {
+  id              String   @id @default(cuid())
+  clienteId       String
+  nome            String   // Nome do portfólio
+  riscoAtual      Float
+  valorTotal      Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relacionamentos
+  cliente         Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  ativos          Ativo[]
+  
+  @@map("carteiras")
+}
+
+// Ativos da Carteira
+model Ativo {
+  id              String   @id @default(cuid())
+  carteiraId      String
+  nome            String
+  risco           Float
+  valorInvestido  Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relacionamentos
+  carteira        Carteira @relation(fields: [carteiraId], references: [id], onDelete: Cascade)
+  
+  @@map("ativos")
+}
+
+// Histórico de Validações de Suitability
+model Validacao {
+  id                String   @id @default(cuid())
+  clienteId         String
+  protocolo         String   @unique
+  status            String   // Aprovado, Alerta, Rejeitado
+  riscoAtual        Float
+  riscoProjetado    Float
+  scoreMaxPermitido Float
+  limiteAlerta      Float
+  mensagem          String
+  
+  // Dados da ordem
+  ativoNome         String
+  ativoRisco        Float
+  valorOrdem        Float
+  
+  // Metadados
+  ipAddress         String?
+  userAgent         String?
+  timestamp         DateTime @default(now())
+  
+  // Relacionamentos
+  cliente           Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  
+  @@map("validacoes")
+}
+
+// Termos de Ciência (quando cliente aceita risco em Alerta)
+model TermoCiencia {
+  id              String   @id @default(cuid())
+  clienteId       String
+  validacaoId     String?
+  protocolo       String   @unique
+  aceito          Boolean  @default(true)
+  
+  // Metadados de auditoria
+  ipAddress       String
+  userAgent       String
+  timestamp       DateTime @default(now())
+  
+  // Relacionamentos
+  cliente         Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  
+  @@map("termos_ciencia")
+}
